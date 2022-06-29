@@ -9,10 +9,13 @@ def custom_exception_handler(exc, context):
     # Now add the HTTP status code to the response.
     if response is not None:
         response.data['code'] = response.status_code
-        if response.status_code == 404:
-            response.data['message'] = "Item not found"
-        else:
-            response.data['message'] = response.data['detail']
+        match response.status_code:
+            case 404:
+                response.data['message'] = "Item not found"
+            case 400:
+                response.data['message'] = 'Validation Failed'
+            case _:
+                response.data['message'] = response.data['detail']
         response.data.pop('detail')
 
     return response

@@ -161,3 +161,6 @@ cython_debug/
 
 # VsCode
 .vscode/
+
+# Unnecessary items
+dump.json

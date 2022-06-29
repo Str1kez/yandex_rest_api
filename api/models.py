@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Sum
 from mptt.models import MPTTModel, TreeForeignKey
 
 
@@ -18,8 +18,11 @@ class ShopUnit(MPTTModel):
     def update_price(self):
         if not self.is_category:
             return
-        average_price = self.get_children().aggregate(Avg('price'))
-        self.price = int(average_price['price__avg'])
+        children = self.get_children()
+        if not children:
+            return
+        price_sum = children.aggregate(Sum('price'))['price__sum']
+        self.price = price_sum // len(children) if price_sum is not None else None
         self.save()
 
     class MPTTMeta:

@@ -16,7 +16,8 @@ def custom_exception_handler(exc, context):
                 response.data['message'] = 'Validation Failed'
             case _:
                 response.data['message'] = response.data['detail']
-        response.data.pop('detail')
+        if 'detail' in response.data:
+            del response.data['detail']
 
     return response
 
